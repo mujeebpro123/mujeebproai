@@ -193,14 +193,21 @@ async function api(body: Record<string, unknown>) {
 async function uploadAsset(path: string, bytes: Uint8Array) {
   const type = ASSET_TYPES[extension(path)] || "application/octet-stream"
   const file = new File([copyArrayBuffer(bytes)], basename(path), { type })
-  const formData = new FormData()
-  formData.append("file", file)
-  const response = await fetch("/api/upload", { method: "POST", body: formData })
-  const payload = (await response.json().catch(() => ({}))) as { url?: string; error?: string; message?: string }
-  if (!response.ok || !payload.url) {
-    throw new Error(payload.message || payload.error || `Could not upload asset: ${path}`)
+  const safeName = basename(path).replace(/[^a-zA-Z0-9._-]/g, "-")
+  const pathname = `imports/${Date.now()}-${crypto.randomUUID()}-${safeName}`
+
+  try {
+    const { upload } = await import("@vercel/blob/client")
+    const blob = await upload(pathname, file, {
+      access: "public",
+      handleUploadUrl: "/api/upload/client",
+    })
+    if (!blob.url) throw new Error("Blob upload completed without a URL")
+    return blob.url
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : "unknown upload error"
+    throw new Error(`Could not upload asset: ${path}. ${detail}`)
   }
-  return payload.url
 }
 
 function publicAssetPath(path: string) {
