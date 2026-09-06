@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation"
 import type { MouseEvent as ReactMouseEvent } from "react"
 
 import { FoodSafetyApprovedPdfOverlay } from "./food-safety-approved-pdf-overlay"
+import { PreviewRouteBar } from "./preview-route-bar"
 import { ProjectDomainManager } from "./project-domain-manager"
 import { SevenEightSixWorkspace } from "./workspace"
 
@@ -24,6 +25,7 @@ export function WorkspaceWithProjectsRoute() {
   return (
     <div className="h-screen" onClickCapture={handleClickCapture}>
       <SevenEightSixWorkspace />
+      <PreviewRouteBar />
       <FoodSafetyApprovedPdfOverlay />
       <ProjectDomainManager />
     </div>
