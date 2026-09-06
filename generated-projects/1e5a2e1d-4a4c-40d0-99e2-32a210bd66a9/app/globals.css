@@ -1,0 +1,135 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --obsidian: #0a0a0a;
+  --ivory: #f5f0e8;
+  --champagne: #d4af37;
+  --jewel: #1e3a5f;
+}
+
+body {
+  background-color: var(--obsidian);
+  color: var(--ivory);
+}
+
+.font-serif {
+  font-family: var(--font-serif), serif;
+}
+
+.font-sans {
+  font-family: var(--font-sans), sans-serif;
+}
+
+.text-champagne {
+  color: var(--champagne);
+}
+
+.bg-champagne {
+  background-color: var(--champagne);
+}
+
+.border-champagne {
+  border-color: var(--champagne);
+}
+
+.bg-jewel {
+  background-color: var(--jewel);
+}
+
+.text-jewel {
+  color: var(--jewel);
+}
+
+.bg-obsidian {
+  background-color: var(--obsidian);
+}
+
+.text-ivory {
+  color: var(--ivory);
+}
+
+.bg-ivory {
+  background-color: var(--ivory);
+}
+
+.border-ivory {
+  border-color: var(--ivory);
+}
+
+.hairline {
+  border-width: 1px;
+  border-style: solid;
+}
+
+.btn-outline {
+  border: 1px solid var(--champagne);
+  color: var(--champagne);
+  padding: 0.75rem 2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.75rem;
+  transition: all 0.3s;
+}
+
+.btn-outline:hover {
+  background-color: var(--champagne);
+  color: var(--obsidian);
+}
+
+.btn-dark {
+  background-color: var(--obsidian);
+  color: var(--ivory);
+  border: 1px solid var(--ivory);
+  padding: 0.75rem 2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.75rem;
+  transition: all 0.3s;
+}
+
+.btn-dark:hover {
+  background-color: var(--ivory);
+  color: var(--obsidian);
+}
+
+.input-field {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(245, 240, 232, 0.3);
+  padding: 0.75rem 0;
+  color: var(--ivory);
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.input-field:focus {
+  border-bottom-color: var(--champagne);
+}
+
+.label {
+  display: block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: rgba(245, 240, 232, 0.6);
+  margin-bottom: 0.5rem;
+}
+
+.section-padding {
+  padding: 6rem 1.5rem;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .section-padding {
+    padding: 4rem 1rem;
+  }
+}
