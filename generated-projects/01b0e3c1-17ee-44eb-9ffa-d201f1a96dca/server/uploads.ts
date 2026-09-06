@@ -10,11 +10,17 @@ import { randomUUID } from "crypto";
 const execAsync = promisify(exec);
 const uploadsRouter = Router();
 
-// Initialize OpenAI with Replit AI Integrations
-const openai = new OpenAI({
-  baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL,
-  apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY,
-});
+// Replit injects these credentials at runtime, but Vercel may not have them.
+// Create the client only when an AI endpoint is called so the whole app can
+// still start and render when optional AI credentials are absent.
+function getOpenAIClient(): OpenAI {
+  const apiKey = process.env.AI_INTEGRATIONS_OPENAI_API_KEY || process.env.OPENAI_API_KEY;
+  if (!apiKey) throw new Error("OpenAI image features are not configured");
+  return new OpenAI({
+    baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL,
+    apiKey,
+  });
+}
 const UPLOAD_DIR = process.env.VERCEL ? path.join("/tmp", "uploads") : path.join(process.cwd(), "uploads");
 
 if (!fs.existsSync(UPLOAD_DIR)) {
@@ -140,7 +146,7 @@ uploadsRouter.post("/api/scan-menu", async (req, res) => {
 
     console.log("Scanning menu image with AI Vision...");
 
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAIClient().chat.completions.create({
       model: "gpt-4o",
       messages: [
         {
@@ -305,7 +311,7 @@ uploadsRouter.post("/api/scan-menu-video", async (req, res) => {
       const base64Frame = `data:image/jpeg;base64,${frameBuffer.toString('base64')}`;
 
       try {
-        const response = await openai.chat.completions.create({
+        const response = await getOpenAIClient().chat.completions.create({
           model: "gpt-4o",
           messages: [
             {
@@ -405,7 +411,7 @@ uploadsRouter.post("/api/ai/generate-image", async (req, res) => {
     }
     fullPrompt += ". Professional food photography style, high quality, studio lighting.";
 
-    const response = await openai.images.generate({
+    const response = await getOpenAIClient().images.generate({
       model: "gpt-image-1",
       prompt: fullPrompt,
       n: 1,
