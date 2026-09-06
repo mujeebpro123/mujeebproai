@@ -1,3 +1,2 @@
 export { registerImageRoutes } from "./routes";
-export { ai, generateImage } from "./client";
-
+export { getAI, generateImage } from "./client";
