@@ -1,6 +1,6 @@
 import type { Express, Request, Response } from "express";
 import { Modality } from "@google/genai";
-import { ai } from "./client";
+import { getAI } from "./client";
 import https from "https";
 import http from "http";
 
@@ -33,7 +33,7 @@ export function registerImageRoutes(app: Express): void {
         return res.status(400).json({ error: "Prompt is required" });
       }
 
-      const response = await ai.models.generateContent({
+      const response = await getAI().models.generateContent({
         model: "gemini-2.5-flash-image",
         contents: [{ role: "user", parts: [{ text: prompt }] }],
         config: {
@@ -67,7 +67,7 @@ export function registerImageRoutes(app: Express): void {
         return res.status(400).json({ error: "Prompt and image data are required" });
       }
 
-      const response = await ai.models.generateContent({
+      const response = await getAI().models.generateContent({
         model: "gemini-2.5-flash-image",
         contents: [{
           role: "user",
@@ -147,7 +147,7 @@ CRITICAL REQUIREMENTS:
 
 Generate the head-swapped image now.`;
 
-      const response = await ai.models.generateContent({
+      const response = await getAI().models.generateContent({
         model: "gemini-2.5-flash-image",
         contents: [{
           role: "user",
@@ -203,7 +203,7 @@ Generate the head-swapped image now.`;
 
       if (!sceneDescription) {
         console.log("[Recreate] Step 1: Analyzing image to get description...");
-        const descResponse = await ai.models.generateContent({
+        const descResponse = await getAI().models.generateContent({
           model: "gemini-2.5-flash",
           contents: [{
             role: "user",
@@ -232,7 +232,7 @@ Generate the head-swapped image now.`;
       let lastError = "";
       for (let attempt = 0; attempt < 2; attempt++) {
         try {
-          const response = await ai.models.generateContent({
+          const response = await getAI().models.generateContent({
             model: "gemini-2.5-flash-image",
             contents: [{
               role: "user",
