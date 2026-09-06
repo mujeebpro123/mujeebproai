@@ -1,5 +1,11 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": "express",
-  "buildCommand": "npm run build"
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist/public",
+  "rewrites": [
+    {
+      "source": "/((?!assets/|fonts/|attached_assets/|favicon.ico|robots.txt|manifest.json).*)",
+      "destination": "/index.html"
+    }
+  ]
 }
