@@ -1,20 +1,23 @@
 import { GoogleGenAI, Modality } from "@google/genai";
 
-// This is using Replit's AI Integrations service, which provides Gemini-compatible API access without requiring your own Gemini API key.
-export const ai = new GoogleGenAI({
-  apiKey: process.env.AI_INTEGRATIONS_GEMINI_API_KEY,
-  httpOptions: {
-    apiVersion: "",
-    baseUrl: process.env.AI_INTEGRATIONS_GEMINI_BASE_URL,
-  },
-});
+// Keep optional Replit/Gemini integration from crashing Vercel at module load.
+export function getAI(): GoogleGenAI {
+  const apiKey = process.env.AI_INTEGRATIONS_GEMINI_API_KEY || process.env.GEMINI_API_KEY;
+  if (!apiKey) throw new Error("Gemini image generation is not configured");
+  return new GoogleGenAI({
+    apiKey,
+    httpOptions: process.env.AI_INTEGRATIONS_GEMINI_BASE_URL
+      ? { apiVersion: "", baseUrl: process.env.AI_INTEGRATIONS_GEMINI_BASE_URL }
+      : undefined,
+  });
+}
 
 /**
  * Generate an image and return as base64 data URL.
  * Uses gemini-2.5-flash-image model via Replit AI Integrations.
  */
 export async function generateImage(prompt: string): Promise<string> {
-  const response = await ai.models.generateContent({
+  const response = await getAI().models.generateContent({
     model: "gemini-2.5-flash-image",
     contents: [{ role: "user", parts: [{ text: prompt }] }],
     config: {
